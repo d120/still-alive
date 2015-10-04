@@ -1,0 +1,337 @@
+<html>
+<head>
+
+<meta charset="utf-8">
+<style>
+body { background: black; color: #BC920C; font: bold 12pt "Courier New",monospace; }
+html,body { overflow: hidden; }
+#wesen { position: absolute; top: 355px; left: 600px; width: 200px; }
+#dbgout { width: 210px; height: 100%; position: absolute; right:10px; top: 5px; bottom: 5px; background: black; color: green }
+</style>
+
+<script type="text/plain" id="names">
+>OPHASE LEITUNG
+
+...
+
+>OPHASE HELPDESK
+
+...
+
+>OPHASE ORGAS
+
+...
+
+>OPHASE TUTOREN
+
+...
+
+
+
+UND VIELE WEITERE HELFER
+
+Vielen Dank, dass Ihr bei der
+Ophase dabei wart!
+
+Viel Erfolg im Studium.
+
+
+
+
+
+
+
+</script>
+<script type="text/plain" id="lyrics">
+<0:0.0>Ophase Winter 2015
+<0:01.0>Abschlussreport
+<0:1.5>
+<0:1.5>
+<0:01.5>This was the OPhase.
+<0:06.5>We make a note here:
+<0:08.5>HUGE SUCCESS.
+<0:11.9>It's hard to overstate
+<0:14.7>our satisfaction.
+<0:17.5>
+<0:19.5>Next comes your
+<0:20.3> Bachelor of Science.
+<0:24.4>You will learn what you must
+<0:26.8> because you must.
+<0:30.6>Learn it all to pass exams
+<0:34.3>Though it's of no further use.
+<0:37>
+<0:37.3>But there's no sense crying
+<0:39.6> over every failed exam
+<0:41.6>Since you've got three tries
+<0:43.7> 'til you receive the final ban
+<0:46.4>Only then your time is gone
+<0:48.6>But you're not the only one
+<0:51>And with luck you will be
+<0:53>Still alive.
+<0:54.2>
+<0:55><PAGE>
+<0:55.6>Ophase Winter 2015
+<0:56.7>Abschlussreport Teil 2
+<0:58.0>
+<0:58.0>Lieber <<Erstie-Name hier>>,
+<1:01.0>
+<1:01.5>But it's to early to cry,
+<1:05.8>'cause you're right at the start
+<1:08.6> of it by now,
+<1:12.3>And we've got some systems here
+<1:16.4> to help you.
+<1:19.5>One of these was the Ophase.
+<1:24.1>Another one is the
+<1:25.9> Mentorensystem.
+<1:30.6>And at last there is the one
+<1:34.5> and only TUCaN for you.
+<1:36.4>
+<1:37>So you see there's really
+<1:38.8> nothing likely to go wrong,
+<1:41.1>Everything is done for you,
+<1:43.2>That's the message of this song.
+<1:45.4>Just lean back enjoy the ride,
+<1:47.6>Let the TUCaN be your guide,
+<1:49.9>And be sure you won't get
+<1:51.9>Out alive.
+<1:53>
+<1:53.7><PAGE>
+<1:54.7>Ophase Winter 2015
+<1:55.2>Abschlussreport Teil 2 Zusatz
+<1:57>
+<1:58>Letzte Anmerkung:
+<1:59.4>
+<2:00.0>You'll get kicked and you'll
+<2:01.8> leave here,
+<2:04.5>While all of your friends are
+<2:06.8> sure to stay behind,
+<2:11>But don't cry 'cause they will
+<2:14.1> daily see you.
+<2:18.3>During your work at the Mensa...
+<2:22.7>To us that's a joke,
+<2:25.5>To you fat chance...
+<2:29.3>Anyways our lives are great!
+<2:33.1>And yours of no further use...
+<2:35>
+<2:35.6>Look at me still talking to you,
+<2:38.2>Who's got work to do,
+<2:39.9>Cleaning dishes, spoons, and
+<2:41.5> forks
+<2:42.4>Man, I'm glad I'm not you!
+<2:44.4>If I was I'd use a gun,
+<2:46.7>But it's you who's done and gone
+<2:48.8>And who's lucky to be
+<2:50.8>Still alive
+<2:51.8>
+<2:52.4><PAGE>
+<2:52.5>
+<2:52.6>
+<2:52.7>
+<2:52.8>
+<2:53.3>PS: And believe me it's luck you're alive.
+<2:57.1>PPS: We're doing Science and you're still alive.
+<3:01.7>PPPS: We feel FANTASTIC and you're still alive.
+<3:05.4>
+<3:05.5>NOCHMAL ZULETZT:
+<3:06.7>We laugh about you while you're still alive.
+<3:09.6>
+<3:09.7>NOCHMAL ZULETZT PS:
+<3:11.1>'cause you'll be poor for the rest of your life.
+<3:14.9>
+<3:15.4>OF YOUR LIFE.
+<3:17.8>STILL ALIVE.
+</script>
+<script type="text/plain" id="logo">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'
+</script>
+
+<script>
+var lyrics=[], lyrics_time = [], lyrics_str = [], names=[], logo=[];
+
+var LYRICWIDTH = 53, LYRICLINES=30, NAMESWIDTH = 35, NAMESLINES=16;
+
+var lyrics_offset = 0;
+var lyrics_line = 0;
+var lyrics_toidx = 0;
+var lyrics_nexttime = 0;
+var lyrics_linestr = "";
+var names_line=0,names_toidx = 0;
+
+var sbuf_lyrics=[""], sbuf_names=[""], sbuf_logo=[""];
+
+function repeat(str,num) {
+  while(str.length<num)str+=str;
+  return str.substring(0,num);
+}
+function pad(str,len,chr) {
+  if (!str) return repeat(chr,len);
+  if (str.length>=len) return str.substring(0,len);
+  else return str + repeat(chr, len-str.length);
+}
+function render() {
+  var out = [];
+  for(var i = 0; i < 32; i++) {
+    var l = "";
+    l += " "
+    if (i == 0 || i == 31) l += repeat("-", LYRICWIDTH);
+    else l += "| " + pad(sbuf_lyrics[i-1], LYRICWIDTH-4, ' ') + " |";
+    l += "  ";
+    if (i == 0 || i == 17) l += repeat("-", NAMESWIDTH);
+    else if (i < 17) l+= "| "+pad(sbuf_names[i-1], NAMESWIDTH-4, ' ') + " |";
+    else l+= sbuf_logo[i-18];
+    out.push(l);
+  }
+  var screen = document.getElementById("screen");
+  screen.innerHTML = out.join("\n").replace(/</g, "&lt;");
+}
+
+function parseTime(str) {
+  var m;
+  if (str && (m = str.match(/^<([0-9]+):([0-9.]+)>(.*)/))) {
+    return [  parseInt(m[1], 10)*60 + parseFloat(m[2]), m[3]  ];
+  }
+  else return [  -1, str  ];
+}
+
+function parseLyrics() {
+  for(var i = 0; i < lyrics.length; i++) {
+    // [lyrics_time[i], lyrics_str[i]] = parseTime(lyrics[lyrics_line+1]);
+    var result = parseTime(lyrics[i]);
+    lyrics_time[i] = result[0];
+    lyrics_str[i] = result[1];
+  }
+}
+function updateLyrics() {
+  if (lyrics_line > lyrics.length) {
+
+  } else if ( (lyrics_time[lyrics_line+1] != -1 && lyrics_time[lyrics_line+1] <= song.currentTime)
+        ||  (lyrics_time[lyrics_line+1] == -1 && lyrics_toidx > lyrics[lyrics_line].length) ) {
+    // new line
+    sbuf_lyrics[sbuf_lyrics.length-1] = lyrics_str[lyrics_line];
+    lyrics_line++;
+
+    console.log(lyrics_nexttime);
+    if (lyrics[lyrics_line].indexOf("<PAGE>") > -1) {
+      lyrics_line++;
+      sbuf_lyrics = [""];
+    }
+    sbuf_lyrics.push("");
+
+    lyrics_toidx=0;
+  } else {
+    lyrics_toidx++;
+    sbuf_lyrics[sbuf_lyrics.length-1] = lyrics_str[lyrics_line].substring(0,lyrics_toidx)+"_";
+  }
+}
+function lyricsNextLine() {
+  var time = song.currentTime-0.5, min = Math.floor(time/60), sec = Math.floor((time%60)*10)/10;
+  var out = "<" + min + ":" + (sec>9?"":"0")+sec + ">" + lyrics_str[lyrics_line];
+  if (lyrics[lyrics_line].indexOf("<PAGE>") > -1) {
+    sbuf_lyrics = [""];
+  }
+  sbuf_lyrics.push(out);
+  lyrics_line ++;
+  debug.value += out + "\n";
+
+  document.getElementById("helper").value=lyrics_str[lyrics_line]+"\n"+lyrics_str[lyrics_line+1]+"\n"+lyrics_str[lyrics_line+2];
+  render();
+}
+
+function updateNames() {
+  if (names_line > names.length) {
+    // names finished? just blink the cursor
+    sbuf_names[sbuf_names.length-1] = sbuf_names[sbuf_names.length-1]?"":"_";
+  } else if (names_toidx > names[names_line].length) {
+    // new line
+    sbuf_names[sbuf_names.length-1] = names[names_line];
+    names_line++;
+    if (sbuf_names.length >= NAMESLINES) {
+      sbuf_names.shift();
+    }
+    sbuf_names.push("");
+    names_toidx=0;
+  } else {
+    //
+    names_toidx++;
+    sbuf_names[sbuf_names.length-1] = names[names_line].substring(0,names_toidx)+"_";
+  }
+  render();
+}
+function updateLogo() {
+  sbuf_logo = logo;
+}
+function update() {
+  if (!debug) updateLyrics();
+  updateNames();
+  render();
+}
+
+function load(id) {
+  window[id] = document.getElementById(id).innerHTML.split(/\n/);
+  window[id].shift();
+}
+
+load("lyrics"); parseLyrics();
+load("names");
+load("logo");
+
+var debug = null;
+var song;
+document.addEventListener("DOMContentLoaded", function() {
+  updateLogo();
+  song = document.getElementById("song");
+
+  if (location.search.indexOf("dbg") > -1) {
+    debug = document.getElementById("dbgout");
+    debug.style.display="inherit";
+    song.style.display="inherit";
+    document.getElementById("helper").style.display="inherit";
+    document.addEventListener("keydown", function(e) {
+      if (e.which==13) {
+        lyricsNextLine();
+      }
+    });
+  } else {
+    song.play();
+  }
+
+  setTimeout(function() {
+    if (!debug) setInterval(updateLyrics,60);
+    setInterval(updateNames,128);
+    setInterval(render,60);
+    //setInterval(update,128);
+  }, 400);
+}, false);
+</script>
+
+</head>
+<body>
+
+<img src="wesen-2015-rand.png" id="wesen">
+<pre id="screen"></pre>
+
+<textarea id="helper" style="display:none;width:400px;height:100px;"></textarea>
+<textarea id="dbgout" style="display:none"></textarea>
+<audio id="song" controls style="display:none; width: 450px;">
+  <source src="Still Alive Master.mp3">
+</audio>
+
+</body>
+
+</html>
