@@ -1,18 +1,18 @@
 <html>
 <head>
-
 <meta charset="utf-8">
 <style>
 body { background: black; color: #BC920C; font: bold 12pt "Courier New",monospace; }
 html,body { overflow: hidden; }
 #wesen { position: absolute; top: 355px; left: 600px; width: 200px; }
 #dbgout { width: 210px; height: 100%; position: absolute; right:10px; top: 5px; bottom: 5px; background: black; color: green }
+#screen {cursor: crosshair}
 </style>
-
 <script type="text/plain" id="names">
 >OPHASE LEITUNG
 
-...
+Johannes Lauinger
+Max Weller
 
 >OPHASE HELPDESK
 
@@ -160,7 +160,6 @@ Viel Erfolg im Studium.
 
 '
 </script>
-
 <script>
 var lyrics=[], lyrics_time = [], lyrics_str = [], names=[], logo=[];
 
@@ -169,7 +168,6 @@ var LYRICWIDTH = 53, LYRICLINES=30, NAMESWIDTH = 35, NAMESLINES=16;
 var lyrics_offset = 0;
 var lyrics_line = 0;
 var lyrics_toidx = 0;
-var lyrics_nexttime = 0;
 var lyrics_linestr = "";
 var names_line=0,names_toidx = 0;
 
@@ -226,7 +224,7 @@ function updateLyrics() {
     sbuf_lyrics[sbuf_lyrics.length-1] = lyrics_str[lyrics_line];
     lyrics_line++;
 
-    console.log(lyrics_nexttime);
+    console.log(lyrics_line, sbuf_lyrics);
     if (lyrics[lyrics_line].indexOf("<PAGE>") > -1) {
       lyrics_line++;
       sbuf_lyrics = [""];
@@ -293,6 +291,7 @@ load("logo");
 
 var debug = null;
 var song;
+var intervals = [];
 document.addEventListener("DOMContentLoaded", function() {
   updateLogo();
   song = document.getElementById("song");
@@ -307,16 +306,25 @@ document.addEventListener("DOMContentLoaded", function() {
         lyricsNextLine();
       }
     });
-  } else {
-    song.play();
   }
 
-  setTimeout(function() {
-    if (!debug) setInterval(updateLyrics,60);
-    setInterval(updateNames,128);
-    setInterval(render,60);
-    //setInterval(update,128);
-  }, 400);
+  song.addEventListener("play", function() {
+    if (intervals.length == 0) {
+      if (!debug) intervals.push(setInterval(updateLyrics,60));
+      intervals.push(setInterval(updateNames,128));
+      intervals.push(setInterval(render,60));
+      //setInterval(update,128);
+    }
+  });
+
+  document.getElementById("screen").addEventListener("click", function() {
+    if (!song.isPlaying) song.play();
+  });
+
+  sbuf_lyrics[0] = "CLICK TO START PLAYBACK"
+  
+  render();
+
 }, false);
 </script>
 
@@ -325,13 +333,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <img src="wesen-2015-rand.png" id="wesen">
 <pre id="screen"></pre>
-
 <textarea id="helper" style="display:none;width:400px;height:100px;"></textarea>
 <textarea id="dbgout" style="display:none"></textarea>
+
 <audio id="song" controls style="display:none; width: 450px;">
   <source src="Still Alive Master.mp3">
 </audio>
-
 </body>
 
 </html>
